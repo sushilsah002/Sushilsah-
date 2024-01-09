@@ -76,8 +76,8 @@
     <script type="module">
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBM8k9jWW5tSFhvt8ZeAYqLmZupQeMzIMY",
@@ -100,6 +100,9 @@
                 .then(
                     (userCredential) => {
                         const user = userCredential.user;
+                        updateProfile(auth.currentUser, { displayName: name.name }).catch(
+                            (err) => console.log(err)
+                        );
                         alert('User Created Successfully');
                         addDoc(collection(db, "users"), { email: email }).then((docRef) => {
                             console.log("Document written with ID: ", docRef.id);
