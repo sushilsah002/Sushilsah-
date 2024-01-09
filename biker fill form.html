@@ -91,7 +91,7 @@
         <p>Please fill in the form to register your bike.</p>
         <hr>
 
-        <form id="form">
+        <form id="dataform">
             <label for="name"><b>Name</b></label>
             <input type="text" placeholder="Enter your name" name="name" id="name" required>
 
@@ -127,9 +127,63 @@
             <button type="submit" id="submitData" name="submitData" class="registerbtn">Register</button>
         </form>
     </div>
-    <script type="module">
 
-        document.getElementById("form").addEventListener('submit', (e) => {
+    <script type="module">
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    
+        const firebaseConfig = {
+            apiKey: "AIzaSyBM8k9jWW5tSFhvt8ZeAYqLmZupQeMzIMY",
+            authDomain: "sushil-7b4f9.firebaseapp.com",
+            projectId: "sushil-7b4f9",
+            storageBucket: "sushil-7b4f9.appspot.com",
+            messagingSenderId: "451591099044",
+            appId: "1:451591099044:web:59027a2f18a5e8c2040c31"
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const db = getFirestore(app);
+    
+        document.getElementById("dataform").addEventListener('submit', async (e) => {
+            e.preventDefault();
+    
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+    
+            try {
+                const docRef = await addDoc(collection(db, "users"), data);
+                console.log("Document written with ID: ", docRef.id);
+                alert("Created");
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alert("Error creating user");
+            }
+        });
+    </script>
+    
+
+    <!-- <script type="module">
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBM8k9jWW5tSFhvt8ZeAYqLmZupQeMzIMY",
+            authDomain: "sushil-7b4f9.firebaseapp.com",
+            projectId: "sushil-7b4f9",
+            storageBucket: "sushil-7b4f9.appspot.com",
+            messagingSenderId: "451591099044",
+            appId: "1:451591099044:web:59027a2f18a5e8c2040c31"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const db = getFirestore(app)
+
+
+        document.getElementById("dataform").addEventListener('submit', (e) => {
             e.preventDefault()
             // const name = document.getElementById("name").value
             // const nId = document.getElementById("Nid").value
@@ -151,9 +205,14 @@
 
             const formData = new FormData(e.target)
             const data = Object.fromEntries(formData)
-            console.log("formdata:". data)
+            // console.log("formdata:", data)
+            const signup = async (data) => {
+                const docRef = await addDoc(collection(db, "users"), data);
+                console.log("Document written with ID: ", docRef.id);
+                alert("Created");
+            }
         })
-    </script>
+    </script> -->
 </body>
 
 </html>
