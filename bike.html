@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bikes</title>
+    <link rel="stylesheet" href="./bike.css">
 </head>
 
 <body>
@@ -18,9 +19,10 @@
             <th>number</th>
         </thead>
         <tbody id="tbody1"></tbody>
-    </table> 
+    </table>
 
-    <script id="Mainscript" type="module">
+
+    <script type="module">
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
@@ -37,33 +39,36 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        window.onload = GetAllDataOnce;
+        const bikesCollection = collection(db, 'Bike');
 
-        async function GetAllDataOnce() {
-            const bikesCollection = collection(db, "Bikes");
-            const bikesSnapshot = await getDocs(bikesCollection);
+        const tbody = document.getElementById('tbody1');
 
-            bikesSnapshot.forEach(doc => {
-                const data = doc.data();
-                console.log("data", data)
-                appendRowToTable(data);
-            });
-        }
+        const fetchData = async () => {
+            try {
+                const querySnapshot = await getDocs(bikesCollection);
 
-        function appendRowToTable(data) {
-            const tbody = document.getElementById("tbody1");
-            const row = document.createElement("tr");
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    console.log("Data from Firestore data:", data);
 
-            const properties = ["Nid", "address", "bikemodel", "email", "name", "number"];
+                    const row = document.createElement('tr');
 
-            properties.forEach(prop => {
-                const cell = document.createElement("td");
-                cell.textContent = data[prop] || ""; 
-                row.appendChild(cell);
-            });
+                    row.innerHTML = `
+                    <td>${data.Nid}</td>
+                    <td>${data.address}</td>
+                    <td>${data.bikeModel}</td>
+                    <td>${data.email}</td>
+                    <td>${data.name}</td>
+                    <td>${data.number}</td>
+                `;
 
-            tbody.appendChild(row);
-        }
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
     </script>
 </body>
 
