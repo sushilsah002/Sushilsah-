@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bikes</title>
+</head>
+
+<body>
+    <table>
+        <thead>
+            <th>Nid</th>
+            <th>address</th>
+            <th>bikemodel</th>
+            <th>email</th>
+            <th>name</th>
+            <th>number</th>
+        </thead>
+        <tbody id="tbody1"></tbody>
+    </table> 
+
+    <script id="Mainscript" type="module">
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBM8k9jWW5tSFhvt8ZeAYqLmZupQeMzIMY",
+            authDomain: "sushil-7b4f9.firebaseapp.com",
+            databaseURL: "https://sushil-7b4f9-default-rtdb.firebaseio.com",
+            projectId: "sushil-7b4f9",
+            storageBucket: "sushil-7b4f9.appspot.com",
+            messagingSenderId: "451591099044",
+            appId: "1:451591099044:web:59027a2f18a5e8c2040c31"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.onload = GetAllDataOnce;
+
+        async function GetAllDataOnce() {
+            const bikesCollection = collection(db, "Bikes");
+            const bikesSnapshot = await getDocs(bikesCollection);
+
+            bikesSnapshot.forEach(doc => {
+                const data = doc.data();
+                console.log("data", data)
+                appendRowToTable(data);
+            });
+        }
+
+        function appendRowToTable(data) {
+            const tbody = document.getElementById("tbody1");
+            const row = document.createElement("tr");
+
+            const properties = ["Nid", "address", "bikemodel", "email", "name", "number"];
+
+            properties.forEach(prop => {
+                const cell = document.createElement("td");
+                cell.textContent = data[prop] || ""; 
+                row.appendChild(cell);
+            });
+
+            tbody.appendChild(row);
+        }
+    </script>
+</body>
+
+</html>
