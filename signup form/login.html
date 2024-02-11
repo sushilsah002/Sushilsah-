@@ -55,7 +55,7 @@
             <input type="text" id="email" name="email" required>
 
             <label for="psw">Password:</label>
-            <input type="psw" id="psw" name="psw" required>
+            <input type="password" id="psw" name="psw" required>
 
             <button type="button" id="submitData" name="submitData" class="registerbtn">Login</button>
             <a href="./register.html">Registration</a>
@@ -64,8 +64,8 @@
     </div>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword , updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBM8k9jWW5tSFhvt8ZeAYqLmZupQeMzIMY",
@@ -80,23 +80,27 @@
         const auth = getAuth();
         const db = getFirestore(app);
 
-        submitData.addEventListener('click', (e) => {
+        submitData.addEventListener('click', async (e) => {
             var email = document.getElementById('email').value;
             var password = document.getElementById('psw').value;
 
-            signInWithEmailAndPassword (auth, email, password)
+            await signInWithEmailAndPassword(auth, email, password)
                 .then(
-                    (userCredential) => {
-                        // const user = userCredential.user;
-                        // updateProfile(auth.currentUser, { displayName: name.name }).catch(
-                        //     (err) => console.log(err)
-                        // );
-                        alert('User logined Successfully');
-                        window.location.href = "../index.html"
-                        // addDoc(collection(db, "users"), { email: email }).then((docRef) => {
-                        //     console.log("Document written with ID: ", docRef.id);
-                        //     alert("Created");
-                        // });
+                    async (response) => {
+                        const userId = response.user.uid;
+                        localStorage.setItem("uid", userId);
+                        const usersDocRef = doc(collection(db, "users"), userId);
+                        const usersDoc = await getDoc(usersDocRef);
+                        console.log(usersDoc.data());
+
+                        if (usersDoc.exists()) {
+                            const userDetails = usersDoc.data();
+                            localStorage.setItem("userD", JSON.stringify(userDetails));
+                            alert('User logined Successfully');
+                            window.location.href = "../index.html"
+                        } else {
+                            throw new Error();
+                        }
                     }
 
                 )
@@ -107,9 +111,6 @@
                 });
         });
     </script>
-</body>
-
-
 </body>
 
 </html>

@@ -1,0 +1,87 @@
+<!-- bikeDetails.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bike Details</title>
+    <style>
+        /* Add your styles for bike details page */
+        .details-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+
+        .details-container img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="details-container" id="bikeDetailsContainer">
+        <!-- Bike details will be dynamically added here -->
+    </div>
+
+    <script type="module">
+        import { getFirestore, collection, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBM8k9jWW5tSFhvt8ZeAYqLmZupQeMzIMY",
+            authDomain: "sushil-7b4f9.firebaseapp.com",
+            projectId: "sushil-7b4f9",
+            storageBucket: "sushil-7b4f9.appspot.com",
+            messagingSenderId: "451591099044",
+            appId: "1:451591099044:web:59027a2f18a5e8c2040c31"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Function to fetch bike details from Firestore based on the provided id
+        async function fetchBikeDetails(id) {
+            const bikeRef = doc(db, "Bike", id);
+            const bikeSnapshot = await getDoc(bikeRef);
+
+            return bikeSnapshot.exists() ? bikeSnapshot.data() : null;
+        }
+
+        // Function to display bike details on the page
+        function displayBikeDetails(bikeDetails) {
+            const detailsContainer = document.getElementById("bikeDetailsContainer");
+
+            if (bikeDetails) {
+                detailsContainer.innerHTML = `
+                    <h2>${bikeDetails.bikeModel}</h2>
+                    <img src="${bikeDetails.bikeImage}" alt="${bikeDetails.name}">
+                    <p>Description: ${bikeDetails.description}</p>
+                    <!-- Add more details as needed -->
+                `;
+            } else {
+                detailsContainer.innerHTML = "<p>Bike not found</p>";
+            }
+        }
+
+        // Extracting the id parameter from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const bikeId = urlParams.get("id");
+
+        // Fetch bike details and display when the page loads
+        window.onload = async function () {
+            if (bikeId) {
+                const bikeDetails = await fetchBikeDetails(bikeId);
+                displayBikeDetails(bikeDetails);
+            } else {
+                console.error("No bike id provided in the URL");
+            }
+        };
+    </script>
+</body>
+
+</html>

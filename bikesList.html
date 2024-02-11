@@ -1,0 +1,85 @@
+<!-- bikesList.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bike List</title>
+    <style>
+        /* Add your styles for the card list */
+        .card {
+            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 10px;
+            cursor: pointer;
+            max-width: 200px;
+        }
+
+        .card img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cardList">
+        <!-- Bike cards will be dynamically added here -->
+    </div>
+
+    <script type="module">
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+         const firebaseConfig = {
+            apiKey: "AIzaSyBM8k9jWW5tSFhvt8ZeAYqLmZupQeMzIMY",
+            authDomain: "sushil-7b4f9.firebaseapp.com",
+            projectId: "sushil-7b4f9",
+            storageBucket: "sushil-7b4f9.appspot.com",
+            messagingSenderId: "451591099044",
+            appId: "1:451591099044:web:59027a2f18a5e8c2040c31"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Function to fetch bike data from Firestore
+        async function fetchBikeData() {
+            const bikeCollection = collection(db, "Bike");
+            const snapshot = await getDocs(bikeCollection);
+            return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        }
+
+        // Function to dynamically create bike cards
+        function createBikeCards(bikeData) {
+            const cardListContainer = document.getElementById("cardList");
+
+            bikeData.forEach(bike => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `
+                    <img src="${bike.bikeImage}" alt="${bike.name}">
+                    <p>${bike.bikeModel}</p>
+                `;
+
+                // Add click event to each card to open details page
+                card.addEventListener("click", () => {
+                    console.log(bike.id)
+                    window.location.href = `bikeDetails.html?id=${bike.id}`;
+                });
+
+                cardListContainer.appendChild(card);
+            });
+        }
+
+        // Fetch bike data and create cards when the page loads
+        window.onload = async function () {
+            const bikeData = await fetchBikeData();
+            createBikeCards(bikeData);
+        };
+    </script>
+</body>
+
+</html>
