@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,35 +45,71 @@
         }
     </style>
 </head>
+
 <body>
 
-<div id="login-container">
-    <h2>Login</h2>
-    <form id="login-form">
-        <label for="email">Email:</label>
-        <input type="text" id="email" name="email" required>
+    <div id="login-container">
+        <h2>Login</h2>
+        <form id="login-form">
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" required>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+            <label for="psw">Password:</label>
+            <input type="psw" id="psw" name="psw" required>
 
-        <button type="button" onclick="login()">Login</button>
-        <a href="./register.html">Registration</a>
+            <button type="button" id="submitData" name="submitData" class="registerbtn">Login</button>
+            <a href="./register.html">Registration</a>
 
-    </form>
-</div>
+        </form>
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword , updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-<script>
-    function login() {
-        var username = document.getElementById("username").value;
-        var password = document.getElementById("password").value;
+        const firebaseConfig = {
+            apiKey: "AIzaSyBM8k9jWW5tSFhvt8ZeAYqLmZupQeMzIMY",
+            authDomain: "sushil-7b4f9.firebaseapp.com",
+            projectId: "sushil-7b4f9",
+            storageBucket: "sushil-7b4f9.appspot.com",
+            messagingSenderId: "451591099044",
+            appId: "1:451591099044:web:59027a2f18a5e8c2040c31"
+        };
 
-        if (username === "user" && password === "password") {
-            alert("Login successful!");
-        } else {
-            alert("Invalid username or password. Please try again.");
-        }
-    }
-</script>
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const db = getFirestore(app);
+
+        submitData.addEventListener('click', (e) => {
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('psw').value;
+
+            signInWithEmailAndPassword (auth, email, password)
+                .then(
+                    (userCredential) => {
+                        // const user = userCredential.user;
+                        // updateProfile(auth.currentUser, { displayName: name.name }).catch(
+                        //     (err) => console.log(err)
+                        // );
+                        alert('User logined Successfully');
+                        window.location.href = "../index.html"
+                        // addDoc(collection(db, "users"), { email: email }).then((docRef) => {
+                        //     console.log("Document written with ID: ", docRef.id);
+                        //     alert("Created");
+                        // });
+                    }
+
+                )
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    alert(errorMessage);
+                });
+        });
+    </script>
+</body>
+
 
 </body>
+
 </html>

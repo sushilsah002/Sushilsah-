@@ -14,6 +14,8 @@
 body {
     scroll-padding-top: 2rem;
     scroll-behavior: smooth;
+    background: #eeeff1;
+
 }
 
 section {
@@ -71,7 +73,6 @@ header {
     width: 100%;
     min-height: 100vh;
     position: relative;
-    background: #eeeff1;
     display: grid;
     align-items: center;
     grid-template-columns: repeat(2, 1fr);
@@ -96,7 +97,9 @@ overflow: hidden;
     width: 300px;
     height: 100%;
     /* animation: slide-left 2 linear; */
-    animation: slide-left 1s both
+    animation: slide-left 1s both;  
+    mix-blend-mode: darken;
+
 
 }
 
