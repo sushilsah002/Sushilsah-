@@ -148,22 +148,13 @@
 
             const formData = new FormData(e.target);
 
-            // Get the file input element
             const fileInput = document.getElementById("bikeImage");
-
-            // Get the file
             const file = fileInput.files[0];
 
-            // Check if a file is selected
             if (file) {
-                // Upload the file to Firebase Storage
                 const storageRef = ref(storage, 'bikeImages/' + file.name);
                 await uploadBytes(storageRef, file);
-
-                // Get the download URL
                 const downloadURL = await getDownloadURL(storageRef);
-
-                // Set the download URL in the data object
                 formData.set("bikeImage", downloadURL);
             }
 

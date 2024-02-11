@@ -20,16 +20,26 @@
             max-width: 100%;
             height: auto;
         }
+
+        #rentButton {
+            display: block;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
     <div class="details-container" id="bikeDetailsContainer">
-        <!-- Bike details will be dynamically added here -->
     </div>
-
+    <button id="rentButton">Rent Bike</button>
     <script type="module">
-        import { getFirestore, collection, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, getDoc, addDoc,setDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
         const firebaseConfig = {
@@ -44,7 +54,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Function to fetch bike details from Firestore based on the provided id
         async function fetchBikeDetails(id) {
             const bikeRef = doc(db, "Bike", id);
             const bikeSnapshot = await getDoc(bikeRef);
@@ -52,7 +61,6 @@
             return bikeSnapshot.exists() ? bikeSnapshot.data() : null;
         }
 
-        // Function to display bike details on the page
         function displayBikeDetails(bikeDetails) {
             const detailsContainer = document.getElementById("bikeDetailsContainer");
 
@@ -68,11 +76,9 @@
             }
         }
 
-        // Extracting the id parameter from the URL
         const urlParams = new URLSearchParams(window.location.search);
         const bikeId = urlParams.get("id");
 
-        // Fetch bike details and display when the page loads
         window.onload = async function () {
             if (bikeId) {
                 const bikeDetails = await fetchBikeDetails(bikeId);
@@ -81,6 +87,39 @@
                 console.error("No bike id provided in the URL");
             }
         };
+
+
+        document.getElementById("rentButton").addEventListener("click", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const bikeId = urlParams.get("id");
+
+            if (bikeId) {
+                const bikeRef = doc(db, "Bike", bikeId);
+
+                getDoc(bikeRef).then((bikeSnapshot) => {
+                    if (bikeSnapshot.exists()) {
+                        const bikeDetails = bikeSnapshot.data();
+
+                        
+                        const userId= localStorage.getItem("uid")
+                        const bookedBikeCollection = collection(db, "bookedBike");
+                        const bookBikeDoc = doc(bookedBikeCollection, userId)
+                      
+
+                        setDoc(bookBikeDoc, {...bikeDetails, bookedOn: Timestamp.now()}).then((docRef) => {
+                            localStorage.setItem("bookingId", docRef.id);
+                            console.log("Bike booked successfully!");
+                        }).catch((error) => {
+                            console.error("Error booking bike: ", error);
+                        });
+                    } else {
+                        console.error("Bike not found");
+                    }
+                });
+            } else {
+                console.error("No bike id provided in the URL");
+            }
+        });
     </script>
 </body>
 

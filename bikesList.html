@@ -26,7 +26,6 @@
 
 <body>
     <div id="cardList">
-        <!-- Bike cards will be dynamically added here -->
     </div>
 
     <script type="module">
@@ -45,14 +44,12 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Function to fetch bike data from Firestore
         async function fetchBikeData() {
             const bikeCollection = collection(db, "Bike");
             const snapshot = await getDocs(bikeCollection);
             return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         }
 
-        // Function to dynamically create bike cards
         function createBikeCards(bikeData) {
             const cardListContainer = document.getElementById("cardList");
 
@@ -64,7 +61,6 @@
                     <p>${bike.bikeModel}</p>
                 `;
 
-                // Add click event to each card to open details page
                 card.addEventListener("click", () => {
                     console.log(bike.id)
                     window.location.href = `bikeDetails.html?id=${bike.id}`;
@@ -74,7 +70,6 @@
             });
         }
 
-        // Fetch bike data and create cards when the page loads
         window.onload = async function () {
             const bikeData = await fetchBikeData();
             createBikeCards(bikeData);
