@@ -106,12 +106,8 @@
                         const bookBikeDoc = doc(bookedBikeCollection, userId)
                       
 
-                        setDoc(bookBikeDoc, {...bikeDetails, bookedOn: Timestamp.now()}).then((docRef) => {
-                            localStorage.setItem("bookingId", docRef.id);
-                            console.log("Bike booked successfully!");
-                        }).catch((error) => {
-                            console.error("Error booking bike: ", error);
-                        });
+                        setDoc(bookBikeDoc, {...bikeDetails, bookedOn: Timestamp.now()})
+                           console.log("done")
                     } else {
                         console.error("Bike not found");
                     }
