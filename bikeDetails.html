@@ -7,18 +7,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bike Details</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
     <style>
-        /* Add your styles for bike details page */
         .details-container {
             max-width: 600px;
             margin: 20px auto;
             padding: 20px;
             border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .details-container img {
             max-width: 100%;
             height: auto;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
 
         #rentButton {
@@ -34,10 +40,16 @@
     </style>
 </head>
 
-<body>
-    <div class="details-container" id="bikeDetailsContainer">
+<body class="bg-light">
+    <div class="container">
+        <div class="details-container" id="bikeDetailsContainer">
+            <!-- Bike details will be dynamically inserted here -->
+        </div>
+
+        <button id="rentButton" class="btn btn-success">Rent Bike</button>
     </div>
-    <button id="rentButton">Rent Bike</button>
+
+ 
     <script type="module">
         import { getFirestore, collection, doc, getDoc, addDoc,setDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -68,7 +80,7 @@
                 detailsContainer.innerHTML = `
                     <h2>${bikeDetails.bikeModel}</h2>
                     <img src="${bikeDetails.bikeImage}" alt="${bikeDetails.name}">
-                    <p>Description: ${bikeDetails.Nid}</p>
+                    <p>Description: ${bikeDetails.description}</p>
                     <!-- Add more details as needed -->
                 `;
             } else {
