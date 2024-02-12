@@ -120,6 +120,7 @@
                         const userDocRef = doc(userCollectionRef, user.uid)
 
                         setDoc(userDocRef, { name: name, email: email, dob: dob, signup_id: user.uid })
+                        alert("User Created")
                     })
                     .catch((error) => {
                         const errorCode = error.code;

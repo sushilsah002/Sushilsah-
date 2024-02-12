@@ -8,7 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bike List</title>
     <style>
-        /* Add your styles for the card list */
+        #cardList {
+            display: flex;
+        }
+
         .card {
             border: 1px solid #ccc;
             margin: 10px;
@@ -17,10 +20,15 @@
             max-width: 200px;
         }
 
-        .card img {
-            max-width: 100%;
-            height: auto;
+        .okImg{
+            height: 125px;
+            width: 200px;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            aspect-ratio: 1/3;
         }
+
     </style>
 </head>
 
@@ -32,7 +40,7 @@
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-         const firebaseConfig = {
+        const firebaseConfig = {
             apiKey: "AIzaSyBM8k9jWW5tSFhvt8ZeAYqLmZupQeMzIMY",
             authDomain: "sushil-7b4f9.firebaseapp.com",
             projectId: "sushil-7b4f9",
@@ -40,6 +48,8 @@
             messagingSenderId: "451591099044",
             appId: "1:451591099044:web:59027a2f18a5e8c2040c31"
         };
+
+        // <img src="${bike.bikeImage}" alt="${bike.name}">
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -57,7 +67,9 @@
                 const card = document.createElement("div");
                 card.className = "card";
                 card.innerHTML = `
-                    <img src="${bike.bikeImage}" alt="${bike.name}">
+                   <div class="okImg" style="background-image: url(${bike.bikeImage});"> 
+ 
+                    </div>
                     <p>${bike.bikeModel}</p>
                 `;
 
