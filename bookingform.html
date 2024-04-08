@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="time"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>INFORMATION</h1>
+    Name <input type="text" placeholder="Enter your name" id="name" value="">
+    Address <input type="text" placeholder="Enter your Address" id="address" value="">
+    Number: <input type="number" placeholder="Enter your number" id="mobile" value="">
+    Time: From<input type="time" id="timeFrom" value="">
+    To <input type="time" id="timeTo" value="">
+    <button type="submit" id="okClick"> Submit</button>
+
+    <script type="module">
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBM8k9jWW5tSFhvt8ZeAYqLmZupQeMzIMY",
+            authDomain: "sushil-7b4f9.firebaseapp.com",
+            projectId: "sushil-7b4f9",
+            storageBucket: "sushil-7b4f9.appspot.com",
+            messagingSenderId: "451591099044",
+            appId: "1:451591099044:web:59027a2f18a5e8c2040c31"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const db = getFirestore(app);
+
+        document.getElementById("okClick").addEventListener("click", (e) => {
+            e.preventDefault();
+            submit();
+        });
+
+        async function submit() {
+            const name = document.getElementById("name").value;
+            const address = document.getElementById("address").value;
+            const mobile = document.getElementById("mobile").value;
+            const timeFrom = document.getElementById("timeFrom").value;
+            const timeTo = document.getElementById("timeTo").value;
+
+            console.log(timeFrom, timeTo)
+
+            if(name === "" || address === "" || mobile ===  ""  || timeFrom === "" || timeTo === "") {
+                alert("All feild are required");
+                return;
+            }
+            const bookData = {
+                name: name,
+                address: address,
+                mobile: mobile,
+                timeFrom: timeFrom,
+                timeTo: timeTo
+            };
+
+            console.log("bookData", bookData);
+
+            const userCollectionRef = collection(db, "bookedBike")
+            const UserId = localStorage.getItem("uid");
+            console.log(UserId ,name !== "" , address !== "" , mobile !==  "" ,  timeFrom !== "" , timeTo !== "")
+            if (UserId && name !== "" && address !== "" && mobile !==  "" &&  timeFrom !== "" && timeTo !== "") {
+                const userDocRef = doc(userCollectionRef, UserId)
+                try {
+                    await setDoc(userDocRef, bookData)
+                    console.log("ok done    ")
+                    alert("Booking Sucessfully");
+                    document.getElementById("name").value =""
+                    document.getElementById("address").value =""
+                    document.getElementById("mobile").value =""
+                    document.getElementById("timeFrom").value =""
+                    document.getElementById("timeTo").value =""
+                    window.location.href = "http://127.0.0.1:5500/index.html";
+                    
+                } catch (error) {
+                    console.log(error)
+                    
+                }
+            } else {
+                alert("Please login to continues")
+                
+            }
+        }
+
+            
+    </script>
+</body>
+
+</html>

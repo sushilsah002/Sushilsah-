@@ -75,40 +75,34 @@
             messagingSenderId: "451591099044",
             appId: "1:451591099044:web:59027a2f18a5e8c2040c31"
         };
-
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth();
+        const auth = getAuth(app);
         const db = getFirestore(app);
 
-        submitData.addEventListener('click', async (e) => {
-            var email = document.getElementById('email').value;
-            var password = document.getElementById('psw').value;
+        document.getElementById('submitData').addEventListener('click', async () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('psw').value;
 
-            await signInWithEmailAndPassword(auth, email, password)
-                .then(
-                    async (response) => {
-                        const userId = response.user.uid;
-                        localStorage.setItem("uid", userId);
-                        const usersDocRef = doc(collection(db, "users"), userId);
-                        const usersDoc = await getDoc(usersDocRef);
-                        console.log(usersDoc.data());
+            try {
+                const response = await signInWithEmailAndPassword(auth, email, password);
+                const userId = response.user.uid;
+                localStorage.setItem("uid", userId);
 
-                        if (usersDoc.exists()) {
-                            const userDetails = usersDoc.data();
-                            localStorage.setItem("userD", JSON.stringify(userDetails));
-                            alert('User logined Successfully');
-                            window.location.href = "../index.html"
-                        } else {
-                            throw new Error();
-                        }
-                    }
+                const usersDocRef = doc(db, "users", userId);
+                const usersDoc = await getDoc(usersDocRef);
 
-                )
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    alert(errorMessage);
-                });
+                if (usersDoc.exists()) {
+                    const userDetails = usersDoc.data();
+                    localStorage.setItem("userDetails", JSON.stringify(userDetails));
+                    alert('User logged in successfully');
+                    // Redirect to the desired page after successful login
+                    window.location.href = "../index.html";
+                } else {
+                    alert('User does not exist in Firestore.');
+                }
+            } catch (error) {
+                alert(`Login failed: ${error.message}`);
+            }
         });
     </script>
 </body>

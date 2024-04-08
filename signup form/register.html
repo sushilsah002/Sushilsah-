@@ -97,42 +97,47 @@
             messagingSenderId: "451591099044",
             appId: "1:451591099044:web:59027a2f18a5e8c2040c31"
         };
+   
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth();
-        const db = getFirestore(app);
+    const submitData = document.getElementById('submitData');
 
-        const submitData = document.getElementById('submitData');
+    submitData.addEventListener('click', async () => {
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const dob = document.getElementById('dob').value;
+        const password = document.getElementById('psw').value;
+        const agreeTerms = document.getElementById('terms').checked;
 
-        submitData.addEventListener('click', (e) => {
-            var name = document.getElementById('name').value;
-            var email = document.getElementById('email').value;
-            var dob = document.getElementById('dob').value;
-            var password = document.getElementById('psw').value;
-            var agreeTerms = document.getElementById('terms').checked;
+        if (!agreeTerms) {
+            alert('Please agree to the Terms & Privacy');
+            return;
+        }
 
-            if (agreeTerms) {
-                createUserWithEmailAndPassword(auth, email, password)
-                    .then((userCredential) => {
-                        const user = userCredential.user;
-                        updateProfile(auth.currentUser, { displayName: name }).catch((err) => console.log(err));
-                        const userCollectionRef = collection(db, "users")
-                        const userDocRef = doc(userCollectionRef, user.uid)
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
 
-                        setDoc(userDocRef, { name: name, email: email, dob: dob, signup_id: user.uid })
-                        alert("User Created")
-                    })
-                    .catch((error) => {
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        alert(errorMessage);
-                    });
-            } else {
-                alert('Please agree to the Terms & Privacy');
-            }
-        });
-    </script>
+            // Update the user's profile
+            await updateProfile(user, {
+                displayName: name
+            });
 
-</body>
+            // Add user data to Firestore
+            await setDoc(doc(db, "users", user.uid), {
+                name: name,
+                email: email,
+                dob: dob,
+                signup_id: user.uid
+            });
 
-</html>
+            alert("User Created Successfully");
+            window.location.href = "http://127.0.0.1:5500/signup%20form/login.html";
+        } catch (error) {
+            alert(error.message);
+        }
+    });
+</script>

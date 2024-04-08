@@ -10,6 +10,7 @@
     <style>
         #cardList {
             display: flex;
+            flex-wrap: wrap;
         }
 
         .card {
@@ -68,9 +69,11 @@
                 card.className = "card";
                 card.innerHTML = `
                    <div class="okImg" style="background-image: url(${bike.bikeImage});"> 
+
  
                     </div>
-                    <p>${bike.bikeModel}</p>
+                    <p>${bike.bikeModel}, ${bike.availabe ? "Availabe" : "Not"}</p>
+
                 `;
 
                 card.addEventListener("click", () => {

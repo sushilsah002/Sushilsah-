@@ -35,9 +35,10 @@
 </head>
 
 <body>
-    <div class="details-container" id="bikeDetailsContainer">
-    </div>
-    <button id="rentButton">Rent Bike</button>
+    
+    <div class="details-container" id="bikeDetailsContainer"></div>
+    <!-- <button id="rentButton"> <a href="./bookingform.html" >Rent Bike</a></button> -->
+    
     <script type="module">
         import { getFirestore, collection, doc, getDoc, addDoc,setDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -70,6 +71,7 @@
                     <img src="${bikeDetails.bikeImage}" alt="${bikeDetails.name}">
                     <p>Description: ${bikeDetails.Nid}</p>
                     <!-- Add more details as needed -->
+                    <button id="rentButton"> <a href="./bookingform.html" >Rent Bike</a></button>
                 `;
             } else {
                 detailsContainer.innerHTML = "<p>Bike not found</p>";
