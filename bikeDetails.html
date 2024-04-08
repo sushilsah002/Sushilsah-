@@ -7,18 +7,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bike Details</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
     <style>
-        /* Add your styles for bike details page */
         .details-container {
             max-width: 600px;
             margin: 20px auto;
             padding: 20px;
             border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .details-container img {
             max-width: 100%;
             height: auto;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
 
         #rentButton {
@@ -69,7 +75,7 @@
                 detailsContainer.innerHTML = `
                     <h2>${bikeDetails.bikeModel}</h2>
                     <img src="${bikeDetails.bikeImage}" alt="${bikeDetails.name}">
-                    <p>Description: ${bikeDetails.Nid}</p>
+                    <p>Description: ${bikeDetails.description}</p>
                     <!-- Add more details as needed -->
                     <button id="rentButton"> <a href="./bookingform.html" >Rent Bike</a></button>
                 `;
@@ -108,12 +114,8 @@
                         const bookBikeDoc = doc(bookedBikeCollection, userId)
                       
 
-                        setDoc(bookBikeDoc, {...bikeDetails, bookedOn: Timestamp.now()}).then((docRef) => {
-                            localStorage.setItem("bookingId", docRef.id);
-                            console.log("Bike booked successfully!");
-                        }).catch((error) => {
-                            console.error("Error booking bike: ", error);
-                        });
+                        setDoc(bookBikeDoc, {...bikeDetails, bookedOn: Timestamp.now()})
+                           console.log("done")
                     } else {
                         console.error("Bike not found");
                     }
