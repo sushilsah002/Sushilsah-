@@ -52,16 +52,18 @@
                 formLink.innerHTML = '<a href="./biker fill form.html">Form</a>';
                 conditionalNavbar.appendChild(formLink);
 
-                iframeContainer.style.display = 'block';
+                const usersLink = document.createElement('li');
+                usersLink.innerHTML = '<a href="./userdetail.html">UserDetails</a>';
+                conditionalNavbar.appendChild(usersLink);
             }
             if(userDetails===null){
                 iframeContainer.style.display = 'none';
                 authLink.textContent = 'Login';
-                authLink.href = 'http://127.0.0.1:5500/index.html';
+                authLink.href = './index.html';
             }
             else {
+                iframeContainer.style.display = 'block';
                 authLink.textContent = 'Logout';
-                authLink.href = '#';
                 authLink.addEventListener('click', function() {
                     localStorage.clear();
                     location.reload();
