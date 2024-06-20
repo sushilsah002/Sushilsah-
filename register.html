@@ -23,8 +23,7 @@
         }
 
         input[type=text],
-        input[type=password],
-        input[type=date] {
+        input[type=password] {
             width: 100%;
             padding: 12px 20px;
             margin: 8px 0;
@@ -72,10 +71,9 @@
             <input type="text" placeholder="Enter Full Name" name="name" id="name"></input>
             <label for="email"><b>Email</b></label>
             <input type="text" placeholder="Enter Email" name="email" id="email"></input>
-            <label for="dob"><b>Date of Birth</b></label>
-            <input type="date" name="dob" id="dob"></input>
             <label for="psw"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" name="psw" id="psw"></input>
+            
             <label>
                 <input type="checkbox" name="terms" id="terms"> I agree to the Terms & Privacy
             </label>
@@ -108,7 +106,6 @@
     submitData.addEventListener('click', async () => {
         const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
-        const dob = document.getElementById('dob').value;
         const password = document.getElementById('psw').value;
         const agreeTerms = document.getElementById('terms').checked;
 
@@ -130,14 +127,15 @@
             await setDoc(doc(db, "users", user.uid), {
                 name: name,
                 email: email,
-                dob: dob,
                 signup_id: user.uid
             });
 
             alert("User Created Successfully");
-            window.location.href = "http://127.0.0.1:5500/signup%20form/index.html";
+            window.location.href = "index.html";
         } catch (error) {
             alert(error.message);
         }
     });
 </script>
+</body>
+</html>

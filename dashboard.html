@@ -14,13 +14,11 @@
         <ul class="navbar">
             <li><a href="dashboard.html">Home</a></li>
             <li><a href="./about.html">About</a></li>
-            <li><a href="./bike.html">Bikes</a></li>
-            <li><a href="./userdetail.html">Userdetails</a></li>
             <li><a href="#">Reviews</a></li>
-            <li><a href="./biker fill form.html">form</a></li>
             <li><a href="./contact.html">Contact</a></li>
         </ul>
-        <a href="/signup form/index.html" class="book">Login</a>
+        <ul class="navbar" id="conditional-navbar"></ul>
+        <a href="#" id="auth-link" class="book">Login</a>
     </header>
 
     <section class="home">
@@ -28,21 +26,49 @@
             <div class="text">
                 <h1>Looking for a bike</h1>
                 <p>Here is Bike available for Rent in all model with low budget</p>
-                <audio src="/car.mp3" autoplay></audio>
-
             </div>
-
             <div class="image">
                 <img src="bike.png" alt="">
             </div>
         </div>
-
     </section>
-    <!-- <div> -->
-    <iframe src="./bikesList.html" frameborder="0" width="100%" height="800px"></iframe>
-    <!-- </div>  -->
-    <!-- <script>audioElement.play();
-    </script> -->
+    <div id="iframe-container">
+        <iframe src="./bikesList.html" frameborder="0" width="100%" height="800px"></iframe>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+            const authLink = document.getElementById('auth-link');
+            const conditionalNavbar = document.getElementById('conditional-navbar');
+            const iframeContainer = document.getElementById('iframe-container');
+
+            if (userDetails && userDetails.email === 'sahsushilkumar@gmail.com') {
+                const bikesLink = document.createElement('li');
+                bikesLink.innerHTML = '<a href="./bike.html">Bikes</a>';
+                conditionalNavbar.appendChild(bikesLink);
+
+                const formLink = document.createElement('li');
+                formLink.innerHTML = '<a href="./biker fill form.html">Form</a>';
+                conditionalNavbar.appendChild(formLink);
+
+                iframeContainer.style.display = 'block';
+            }
+            if(userDetails===null){
+                iframeContainer.style.display = 'none';
+                authLink.textContent = 'Login';
+                authLink.href = 'http://127.0.0.1:5500/index.html';
+            }
+            else {
+                authLink.textContent = 'Logout';
+                authLink.href = '#';
+                authLink.addEventListener('click', function() {
+                    localStorage.clear();
+                    location.reload();
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
